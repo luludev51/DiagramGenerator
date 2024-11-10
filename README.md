@@ -1,16 +1,17 @@
 # DiagramGenerator
 
-A librabry that allow to make diagram simply with 2 lines
+A librabry that allow to make diagram simply
 
 ## Installation
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
+Download `diagramme.py` and put it in your project folder.
 
 ```bash
 pip install diagramme
 ```
 
 ## Usage
+**for html usage**
 
 ```python
 import diagramme
@@ -20,6 +21,18 @@ encode = diagramme.pie(["Male","Female"],[60,40])
 
 with open("example.html",'w') as f:
     f.write(f"<img src='data:image/png;base64,{pie(["a", "b", "c"], [1, 2, 3], True, False)} '>")
+```
+
+**for image show**
+
+```python
+import diagramme
+import plt
+
+fig = diagramme.pie(names=['a', 'b', 'c'], values=[1, 2, 3], image=True)
+img = plt.imread(fig)
+plt.imshow(img)
+plt.show()
 ```
 
 ## Contributing
