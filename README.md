@@ -6,10 +6,6 @@ A librabry that allow to make diagram simply
 
 Download `diagramme.py` and put it in your project folder.
 
-```bash
-pip install diagramme
-```
-
 ## Usage
 **for html usage**
 
