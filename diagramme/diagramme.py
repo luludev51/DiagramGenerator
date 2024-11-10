@@ -3,22 +3,51 @@ from io import BytesIO
 import base64
 
 
-def pie(names: list, values: list, backgroundTransparent: bool = True, percent: bool = True) -> str:
+def pie(names: list, values: list, backgroundTransparent: bool = True, percent: bool = True, image = False) -> str or matplotlib.pyplot.Figure:
     """
     Return a pie chart using matplotlib.pyplot library
     encoding in base64 for HTML usage.
+    Can return the matplotlib.pyplot figure if image set to True
 
-    Usage: pie(names, values)
+
 
     Parameters
     ----------
         - "names" : list of str
         - "values" : list of float or int
+        - "backgroundTransparent" : bool
+        - "percent" : bool
+        - "image" : bool
 
     Returns
     -------
-        - image : str
+        - image : str or matplotlib.pyplot.Figure
+
+    Usage
+    -----
+    **For HTML usage**:
+
+        import diagramme
+
+        encode = diagramme.pie(["Male","Female"],[60,40])
+        with open("example.html",'w') as f:
+            f.write(f"<img src='data:image/png;base64,{encode} '>")
+
+
+    **For Image show**:
+
+        import diagramme
+        import plt
+
+
+        fig = diagramme.pie(names=['a', 'b', 'c'], values=[1, 2, 3], image=True)
+        img = plt.imread(fig)
+        plt.imshow(img)
+        plt.show()
+
     """
+
+
 
     if type(names) != list or type(values) != list:
         raise TypeError('names and values must be lists not {} and {}'.format(type(names), type(values)))
@@ -41,10 +70,15 @@ def pie(names: list, values: list, backgroundTransparent: bool = True, percent: 
     #Create pie chart
     fig, ax = plt.subplots()
 
+    if percent == True:
+        lables = [f'{name}: {value}%' for name, value in zip(names, values)]
+    else:
+        lables = [f'{name}: {value}' for name, value in zip(names, values)]
+
     # Plot the pie chart
-    ax.pie(
+    try :ax.pie(
         values,
-        labels=[f'{name}: {value}%' for name, value in zip(names, values)],
+        labels=lables,
         startangle=90,
         colors=[
             'green',
@@ -63,6 +97,8 @@ def pie(names: list, values: list, backgroundTransparent: bool = True, percent: 
         labeldistance=1.2,
         rotatelabels = True
         )
+    except ValueError:
+        raise ValueError('All values don\'t add up to 100%')
 
     # Show percentage values
     for t in ax.texts:
@@ -82,8 +118,13 @@ def pie(names: list, values: list, backgroundTransparent: bool = True, percent: 
 
     # Convert plot to base64
     buffer = BytesIO()
-    plt.savefig(buffer, format='png')
+    plt.savefig(buffer, format='png', bbox_inches='tight', pad_inches=0, transparent=backgroundTransparent)
     buffer.seek(0)
+    if image == True:
+        return buffer
     image = base64.b64encode(buffer.getvalue()).decode()
 
     return image #return plot in base64
+
+
+
