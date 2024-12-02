@@ -2,6 +2,8 @@
 
 A librabry that allow to make diagram simply
 
+# /!\ WARNING : DO NOT TRY TO `pip install` cause it will not work. For installation, follow the line right after
+
 ## Installation
 
 Download `diagramme.py` and put it in your project folder.
